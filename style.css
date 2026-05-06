@@ -1,0 +1,216 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+body.dark {
+    background-color: #050505;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%), 
+        radial-gradient(circle at 90% 80%, rgba(168, 85, 247, 0.15) 0%, transparent 40%);
+    background-attachment: fixed;
+    color: #f3f4f6;
+    margin: 0;
+    font-family: 'Outfit', sans-serif !important;
+}
+
+.gradio-container {
+    max-width: 1400px !important;
+    font-family: 'Outfit', sans-serif !important;
+    padding-top: 50px !important;
+    padding-bottom: 50px !important;
+}
+
+/* --- Premium Glass Panels --- */
+.glass-panel {
+    background: rgba(17, 24, 39, 0.65) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 24px !important;
+    padding: 40px !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+}
+
+/* Header Styling */
+.app-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+.app-header h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #60a5fa, #a855f7, #f472b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -1px;
+}
+.app-header p {
+    color: #9ca3af;
+    font-size: 1.2rem;
+    font-weight: 400;
+}
+
+/* --- Buttons --- */
+.btn-primary, .btn-secondary {
+    white-space: nowrap !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 50px !important;
+    font-size: 1rem !important;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #4f46e5, #9333ea) !important;
+    border: none !important;
+    box-shadow: 0 8px 20px rgba(147, 51, 234, 0.3) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease !important;
+}
+.btn-primary:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 12px 25px rgba(147, 51, 234, 0.5) !important;
+}
+
+.btn-secondary {
+    background: rgba(31, 41, 55, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #e5e7eb !important;
+    font-weight: 500 !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease !important;
+}
+.btn-secondary:hover {
+    background: rgba(55, 65, 81, 0.9) !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Copy Button Specific - FIXED SIZE & ALIGNMENT */
+#copy-btn {
+    align-self: center !important; /* CRITICAL: Stops Gradio from stretching it */
+    margin-top: 20px !important;
+    margin-bottom: 10px !important;
+    width: 220px !important;
+    min-width: 220px !important;
+    max-width: 220px !important;
+    height: 45px !important;
+    flex-grow: 0 !important;
+    background: linear-gradient(90deg, #ec4899, #8b5cf6, #3b82f6) !important;
+    background-size: 200% auto !important;
+    border: none !important;
+    color: white !important;
+    font-weight: 600 !important;
+    font-size: 1rem !important;
+    border-radius: 30px !important; /* Pill shape */
+    box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3) !important;
+    transition: all 0.3s ease !important;
+    animation: gradientShift 3s linear infinite, pulseGlow 2s infinite alternate !important;
+}
+#copy-btn:hover {
+    transform: translateY(-3px) scale(1.05) !important;
+    box-shadow: 0 10px 25px rgba(236, 72, 153, 0.5) !important;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+@keyframes pulseGlow {
+    0% { filter: drop-shadow(0 0 5px rgba(139, 92, 246, 0.4)); }
+    100% { filter: drop-shadow(0 0 15px rgba(236, 72, 153, 0.6)); }
+}
+
+/* --- Loading Animation --- */
+.loading-box {
+    text-align: center;
+    padding: 5rem 2rem;
+    background: rgba(17, 24, 39, 0.4);
+    border-radius: 16px;
+    border: 1px dashed rgba(255,255,255,0.1);
+    margin: auto 0;
+}
+.loader {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(255,255,255,0.1);
+    border-top-color: #a855f7;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+    margin-bottom: 1.5rem;
+}
+@keyframes rotation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* --- Media --- */
+.thumbnail-box {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    margin: 20px 0;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.thumbnail-box img {
+    width: 100%;
+    display: block;
+    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.thumbnail-box:hover img {
+    transform: scale(1.05);
+}
+
+/* --- Text & Content --- */
+h3 {
+    font-weight: 600 !important;
+    color: #f9fafb !important;
+    margin-bottom: 15px !important;
+    font-size: 1.4rem !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.summary-content {
+    font-size: 1.1rem !important;
+    line-height: 1.8 !important;
+    color: #d1d5db !important;
+    flex-grow: 1;
+    overflow-y: auto;
+    padding-right: 15px;
+    min-height: 350px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* Fix Gradio Overrides */
+.block {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+.prose {
+    color: #cbd5e1 !important;
+}
