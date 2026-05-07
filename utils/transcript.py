@@ -1,4 +1,4 @@
-# utils/transcript.py - Fixed with actual error classes
+# I made this file to handle getting the text from YouTube videos.
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import (
     NoTranscriptFound,
@@ -9,27 +9,13 @@ from youtube_transcript_api._errors import (
     TranslationLanguageNotAvailable
 )
 
-# Note: TooManyRequests doesn't exist in this version
-# We'll handle rate limits differently
-
 def get_youtube_transcript(video_id, preferred_languages=['en']):
-    """
-    Fetch transcript from YouTube video with intelligent fallback
-    
-    Args:
-        video_id: YouTube video ID (11 characters)
-        preferred_languages: List of language codes to try (default: ['en'])
-    
-    Returns:
-        String containing the full transcript with language note
-    
-    Raises:
-        Exception with user-friendly error message
-    """
+    # This function tries to get the transcript in a language we prefer.
+    # It takes the video id and a list of languages.
     
     ytt_api = YouTubeTranscriptApi()
     
-    # Step 1: Try to get transcript in preferred languages
+    # First, we try to get the transcript in our preferred languages.
     for language in preferred_languages:
         try:
             transcript_data = ytt_api.fetch(video_id, languages=[language])
@@ -37,21 +23,21 @@ def get_youtube_transcript(video_id, preferred_languages=['en']):
             return transcript_text
             
         except NoTranscriptFound:
-            continue  # Try next language
+            continue  # If we don't find it, we just try the next language.
         except TranscriptsDisabled:
-            raise Exception("⚠️ Captions are disabled for this video. Creator has turned off subtitles.")
+            raise Exception("Notice: Captions are disabled for this video. Creator has turned off subtitles.")
         except VideoUnavailable:
-            raise Exception("❌ Video is unavailable. It may be private or deleted.")
+            raise Exception("Error: Video is unavailable. It may be private or deleted.")
         except InvalidVideoId:
-            raise Exception("❌ Invalid YouTube video ID. Please check the URL.")
+            raise Exception("Error: Invalid YouTube video ID. Please check the URL.")
         except Exception as e:
-            # Check if it's a rate limit error by looking at the message
+            # We check if we asked YouTube too many times and they told us to wait.
             error_msg = str(e)
             if "429" in error_msg or "too many" in error_msg.lower():
-                raise Exception("⏰ Too many requests. Please try again in a few minutes.")
+                raise Exception("Notice: Too many requests. Please try again in a few minutes.")
             continue  # Try next language for other errors
     
-    # Step 2: If no transcript in preferred languages, list all available transcripts
+    # If we couldn't find our preferred languages, we list all available ones.
     try:
         transcript_list = ytt_api.list(video_id)
         
@@ -60,61 +46,54 @@ def get_youtube_transcript(video_id, preferred_languages=['en']):
             lang_code = transcript.language_code
             lang_name = transcript.language
             is_generated = "auto-generated" if transcript.is_generated else "manual"
-            available_languages.append(f"  • {lang_name} ({lang_code}) - {is_generated}")
+            available_languages.append(f"  - {lang_name} ({lang_code}) - {is_generated}")
         
         if available_languages:
             languages_list = "\n".join(available_languages)
             raise Exception(f"""
-📝 **No transcript in your preferred languages.**
+Notice: No transcript in your preferred languages.
 
-**Available transcripts for this video:**
+Available transcripts for this video:
 {languages_list}
 
-💡 **Try using a different video or add language codes to the function.**
+Try using a different video or add language codes to the function.
             """.strip())
         else:
-            raise Exception("📝 No transcript available for this video. The video may have no captions at all.")
+            raise Exception("Notice: No transcript available for this video. The video may have no captions at all.")
             
     except NoTranscriptFound:
-        raise Exception("📝 No transcript available for this video. The video may have no captions.")
+        raise Exception("Notice: No transcript available for this video. The video may have no captions.")
     except TranscriptsDisabled:
-        raise Exception("⚠️ Captions are disabled for this video.")
+        raise Exception("Notice: Captions are disabled for this video.")
     except Exception as e:
-        raise Exception(f"❌ Failed to fetch transcript: {str(e)}")
+        raise Exception(f"Error: Failed to fetch transcript: {str(e)}")
 
 
 def get_transcript_with_auto_language(video_id):
-    """
-    Automatically detect and fetch the best available transcript
-    
-    Args:
-        video_id: YouTube video ID
-    
-    Returns:
-        Tuple of (transcript_text, detected_language)
-    """
+    # This function automatically picks the best transcript it can find.
     
     ytt_api = YouTubeTranscriptApi()
     
     try:
-        # Get list of all available transcripts
+        # We get the list of all available transcripts
         transcript_list = ytt_api.list(video_id)
         
-        # Priority order: manual En → auto En → any manual → any auto
+        # We will keep track of the best one we find using a score.
         best_transcript = None
         priority_score = -1
         
         for transcript in transcript_list:
             score = 0
-            # Manual transcripts are better than auto-generated
+            # We prefer human-written transcripts over auto-generated ones.
             if not transcript.is_generated:
                 score += 10
-            # English is preferred
+            # We prefer English if possible.
             if transcript.language_code == 'en':
                 score += 5
-            # Shorter language codes are usually primary languages
+            # Short language codes usually mean it's a main language.
             score += (10 - len(transcript.language_code))
             
+            # If this transcript has a better score, it becomes the new best.
             if score > priority_score:
                 priority_score = score
                 best_transcript = transcript
@@ -134,20 +113,13 @@ def get_transcript_with_auto_language(video_id):
 
 
 def check_transcript_availability(video_id):
-    """
-    Check what transcripts are available without fetching them
-    
-    Args:
-        video_id: YouTube video ID
-    
-    Returns:
-        Dictionary with availability information
-    """
+    # This function just checks what transcripts exist without downloading them.
     
     try:
         ytt_api = YouTubeTranscriptApi()
         transcript_list = ytt_api.list(video_id)
         
+        # We create a dictionary to store what we found.
         available = {
             'has_transcripts': True,
             'languages': [],
