@@ -179,4 +179,5 @@ if __name__ == "__main__":
     
     # Absolute path for favicon to guarantee it loads
     favicon_path = os.path.abspath("favicon.png")
-    app.launch(favicon_path=favicon_path)
+    #app.launch(favicon_path=favicon_path)
+    app.launch(server_name="0.0.0.0", server_port=7860,favicon_path=favicon_path)
